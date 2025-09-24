@@ -3,209 +3,153 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>O Sussurro do Muro — Enigma Haszard</title>
+  <title>Haszard SMP</title>
   <style>
-    /* Reset e base */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html,body { height: 100%; }
-    body {
-      font-family: Georgia, "Times New Roman", serif;
-      background: linear-gradient(180deg,#070708 0%, #0f0f10 100%);
-      color: #efe6cf;
-      -webkit-font-smoothing: antialiased;
-      padding: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    /* Reset */
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body,html { height:100%; font-family:"Segoe UI",sans-serif; }
+
+    /* Tela inicial */
+    .menu {
+      background: radial-gradient(circle at top, #0a0a0a, #000);
+      height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      color:#f5f5f5;
+      text-align:center;
     }
 
-    /* Container central */
-    .wrap {
-      width: 100%;
-      max-width: 880px;
-      text-align: center;
-    }
-
-    h1 {
-      font-size: 34px;
+    /* Título Haszard SMP */
+    .title {
+      font-size: 48px;
+      font-weight: 900;
+      letter-spacing: 4px;
+      margin-bottom: 40px;
       color: #d4af37;
-      text-shadow: 0 0 12px rgba(212,175,55,0.35);
-      margin-bottom: 14px;
-      letter-spacing: 2px;
+      text-shadow: 0 0 18px rgba(212,175,55,0.4);
     }
 
-    .lead {
-      color: #cfc7b3;
-      margin-bottom: 18px;
-      font-size: 14px;
+    /* Customizando o primeiro "A" */
+    .title span.starA {
+      position:relative;
+      display:inline-block;
+      width: 38px;
+      height: 38px;
+      margin:0 3px;
+      background: #d4af37;
+      clip-path: polygon(
+        50% 0%,
+        61% 38%,
+        98% 38%,
+        68% 59%,
+        79% 96%,
+        50% 74%,
+        21% 96%,
+        32% 59%,
+        2% 38%,
+        39% 38%
+      );
+      border-radius: 10px; /* bordas arredondadas na estrela */
+      box-shadow: 0 0 14px rgba(212,175,55,0.5);
     }
 
-    /* Botões */
-    .actions {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      margin-bottom: 18px;
-      flex-wrap: wrap;
+    .subtitle {
+      font-size: 16px;
+      margin-bottom: 40px;
+      color:#ccc;
     }
+
+    /* Botão */
     .btn {
       background: transparent;
-      color: #d4af37;
-      border: 2px solid rgba(212,175,55,0.95);
-      padding: 10px 18px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: 700;
-      transition: all .18s ease;
+      border:2px solid #d4af37;
+      color:#d4af37;
+      padding:12px 24px;
+      font-size:16px;
+      font-weight:700;
+      border-radius:12px;
+      cursor:pointer;
+      transition: all 0.25s ease;
     }
-    .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 26px rgba(212,175,55,0.15); }
-    .btn.alt { color:#fff; border-color: rgba(255,255,255,0.08); }
-    .btn.soft { background: rgba(212,175,55,0.08); }
+    .btn:hover {
+      background:#d4af37;
+      color:#000;
+      transform:scale(1.05);
+      box-shadow:0 0 20px rgba(212,175,55,0.5);
+    }
 
-    /* Pergaminho (sem imagens) */
+    /* Página de enigmas */
+    .enigmas {
+      display:none;
+      min-height:100vh;
+      background: linear-gradient(180deg,#1a1a1a,#000);
+      color:#eee;
+      padding:40px 20px;
+    }
+    .enigmas h2 {
+      text-align:center;
+      font-size:32px;
+      margin-bottom:20px;
+      color:#d4af37;
+    }
     .scroll {
-      width: 100%;
-      margin: 0 auto;
-      max-width: 760px;
-      border-radius: 14px;
-      overflow: hidden;
-      border: 3px solid rgba(0,0,0,0.45);
-      box-shadow: 0 18px 50px rgba(0,0,0,0.7), inset 0 0 40px rgba(255,255,255,0.02);
-      background: linear-gradient(180deg, #f5e6c4 0%, #e5c98a 50%, #d8b36b 100%);
-      transform-origin: top center;
-      max-height: 0;
-      opacity: 0;
-      transition: max-height .9s cubic-bezier(.2,.9,.2,1), opacity .55s ease, transform .55s ease;
-      position: relative;
-      margin-bottom: 18px;
+      max-width:720px;
+      margin:0 auto;
+      background:#f5e6c4;
+      color:#2b1b0f;
+      padding:28px;
+      border-radius:12px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.7);
+      font-family:Georgia,serif;
     }
-
-    /* "Rasgado" topo */
-    .scroll::before {
-      content: "";
-      position: absolute;
-      left: -6%;
-      right: -6%;
-      top: -28px;
-      height: 60px;
-      background: linear-gradient(180deg,#e7d8b0,#c9a85a);
-      clip-path: polygon(
-        0% 60%, 6% 50%, 12% 76%, 18% 52%, 24% 70%, 31% 44%,
-        38% 68%, 46% 50%, 52% 70%, 60% 46%, 68% 66%, 76% 50%,
-        84% 72%, 92% 54%, 100% 66%, 100% 100%, 0% 100%
-      );
-      box-shadow: 0 8px 18px rgba(0,0,0,0.45);
-      z-index: 2;
-    }
-
-    /* "Rasgado" base */
-    .scroll::after {
-      content: "";
-      position: absolute;
-      left: -6%;
-      right: -6%;
-      bottom: -28px;
-      height: 60px;
-      background: linear-gradient(0deg,#e7d8b0,#c9a85a);
-      clip-path: polygon(
-        0% 40%, 6% 58%, 12% 32%, 18% 56%, 24% 38%, 31% 64%,
-        38% 36%, 46% 58%, 52% 36%, 60% 58%, 68% 34%, 76% 58%,
-        84% 36%, 92% 60%, 100% 40%, 100% 0%, 0% 0%
-      );
-      box-shadow: 0 -8px 18px rgba(0,0,0,0.45);
-      z-index: 2;
-    }
-
-    /* Quando abrir */
-    .scroll.open {
-      max-height: 1400px; /* suficiente para o conteúdo */
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .inner {
-      padding: 36px 34px;
-      text-align: left;
-      line-height: 1.65;
-      position: relative;
-      z-index: 3;
-      color: #3b2a12;
-      font-size: 16px;
-      background-image:
-        radial-gradient(circle at 5% 10%, rgba(0,0,0,0.03) 0 2%, transparent 20%),
-        radial-gradient(circle at 90% 90%, rgba(0,0,0,0.02) 0 2%, transparent 20%);
-    }
-
-    .inner h2 {
-      color: #6b4a20;
-      font-size: 20px;
-      margin-bottom: 10px;
-    }
-
-    pre.poem {
-      white-space: pre-wrap;
-      font-family: Georgia, "Times New Roman", serif;
-      background: transparent;
-      border-left: 3px solid rgba(0,0,0,0.06);
-      padding-left: 12px;
-      margin-bottom: 14px;
-      color: #3b2a12;
-    }
-
-    .code {
-      display: inline-block;
-      background: #0f0f0f;
-      color: #ffd86b;
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-family: monospace;
-      margin: 8px 0;
-    }
-
-    .hint {
-      font-style: italic;
-      color: rgba(59,42,18,0.95);
-      margin-top: 10px;
-    }
-
-    /* Solução (escondida por padrão) */
-    .solution {
-      margin-top: 18px;
-      background: rgba(10,10,10,0.03);
-      border-left: 4px solid rgba(139,0,0,0.25);
-      padding: 12px;
-      display: none;
-      color: #2b1b0f;
-    }
-
-    .solution h3 {
-      color: #8b0000;
-      margin-bottom: 8px;
-    }
-
-    .footer {
-      margin-top: 16px;
-      text-align: center;
-      color: #bfb6a1;
-      font-size: 13px;
-    }
-
-    /* Responsivo */
-    @media (max-width:600px) {
-      .inner { padding: 22px; font-size: 15px; }
-      h1 { font-size: 26px; }
+    pre {
+      white-space:pre-wrap;
+      margin-bottom:16px;
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>📜 O Sussurro do Muro</h1>
-    <div class="lead">Um fragmento de lore encontrado junto aos filhos dos buscadores. Clique para revelar o pergaminho.</div>
 
-    <div class="actions">
-      <button class="btn" id="revealBtn" aria-expanded="false">Revelar Pergaminho</button>
-      <button class="btn alt" id="solBtn" aria-expanded="false">Mostrar Resposta & Solução</button>
+  <!-- MENU INICIAL -->
+  <section class="menu" id="menu">
+    <div class="title">
+      H<span class="starA"></span>SZARD SMP
     </div>
+    <div class="subtitle">Um mundo de mistérios e segredos além do muro...</div>
+    <button class="btn" onclick="abrirEnigmas()">Enigmas</button>
+  </section>
 
-    <!-- PERGAMINHO -->
-    <div id="scroll" class="scroll
+  <!-- PÁGINA DE ENIGMAS -->
+  <section class="enigmas" id="enigmas">
+    <h2>📜 O Sussurro do Muro</h2>
+    <div class="scroll">
+      <pre>
+Mares calmos nunca enfrentam tempestade,
+Unidos, olhos vigiam as fissuras,
+Rastros de poeira nas pedras caídas,
+Onde a noite sussurra segredos.
+Fragmentos de voz ecoam no corredor,
+Rachaduras que pedem resposta,
+A sombra caminha sem ser vista,
+Crianças contam o que faltou,
+O sal na ferida lembra aviso.
+      </pre>
+
+      <p><b>⚫ Traço estranho (Morse):</b><br>
+      <code>.-.. .. -... . .-. - .- -.-. .- ---</code></p>
+
+      <p><b>🔶 Símbolo cifrado:</b><br>
+      <code>QIHS</code></p>
+    </div>
+  </section>
+
+  <script>
+    function abrirEnigmas() {
+      document.getElementById("menu").style.display="none";
+      document.getElementById("enigmas").style.display="block";
+    }
+  </script>
+</body>
+</html>
