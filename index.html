@@ -5,43 +5,59 @@
   <title>Enigma Haszard</title>
   <style>
     /* Reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      height: 100vh;
-      overflow-x: hidden;
-      color: #f5f5dc;
+      min-height: 100vh;
       font-family: 'Georgia', serif;
-      background: linear-gradient(180deg, #0a0a0a, #1a1a1a);
+      color: #f5f5dc;
+      background: #0a0a0a;
+      overflow-x: hidden;
+      overflow-y: auto;
       perspective: 1px;
-      transform-style: preserve-3d;
     }
 
-    /* Camadas parallax */
-    .parallax-layer {
-      position: absolute;
+    /* === PARALLAX CAMADAS === */
+    .layer {
+      position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
       background-repeat: no-repeat;
       background-size: cover;
+      z-index: -3;
+    }
+
+    .stars {
+      background: repeating-radial-gradient(circle at 10% 10%, #222 0 2px, transparent 3px 100px);
+      animation: drift 60s linear infinite;
+    }
+
+    .mist {
+      background: radial-gradient(circle at 50% 30%, rgba(255,255,255,0.05), transparent 70%);
+      animation: mistMove 40s ease-in-out infinite alternate;
       z-index: -2;
     }
 
-    .layer1 {
-      background: radial-gradient(circle at 20% 20%, rgba(255,215,0,0.08), transparent 70%);
-      transform: translateZ(-1px) scale(2);
+    .red-glow {
+      background: radial-gradient(circle at 80% 80%, rgba(255,0,0,0.08), transparent 60%);
+      animation: pulse 6s infinite alternate;
+      z-index: -1;
     }
 
-    .layer2 {
-      background: radial-gradient(circle at 80% 80%, rgba(255,0,0,0.06), transparent 70%);
-      transform: translateZ(-0.5px) scale(1.5);
+    @keyframes drift {
+      from { background-position: 0 0; }
+      to { background-position: 500px 1000px; }
+    }
+    @keyframes mistMove {
+      from { background-position: 0 0; }
+      to { background-position: 200px 300px; }
+    }
+    @keyframes pulse {
+      from { opacity: 0.3; }
+      to { opacity: 0.8; }
     }
 
-    /* Container central */
+    /* === CONTEÚDO === */
     .container {
       position: relative;
       height: 100vh;
@@ -49,8 +65,9 @@
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      z-index: 2;
       text-align: center;
+      z-index: 2;
+      padding: 20px;
     }
 
     h1 {
@@ -76,11 +93,80 @@
       box-shadow: 0 0 15px #d4af37;
     }
 
-    /* Pergaminho animado */
+    /* === PERGAMINHO === */
     .scroll {
       max-height: 0;
       overflow: hidden;
       transition: max-height 2s ease, padding 2s ease;
       margin-top: 20px;
       background: linear-gradient(180deg, #e2c97d, #c5a356);
-      border
+      border: 4px solid #8b6f3d;
+      border-radius: 20px;
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.5), 0 0 20px rgba(212,175,55,0.6);
+      padding: 0 20px;
+      width: 90%;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .scroll.open {
+      max-height: 1200px;
+      padding: 30px;
+    }
+
+    .scroll p {
+      font-size: 1.1rem;
+      color: #2a1b0a;
+      text-shadow: 0 0 5px rgba(0,0,0,0.4);
+      line-height: 1.7;
+      margin-bottom: 15px;
+    }
+
+    .highlight {
+      color: #8b0000;
+      font-weight: bold;
+      text-shadow: 0 0 10px rgba(255,0,0,0.5);
+    }
+
+  </style>
+</head>
+<body>
+  <!-- Fundo com parallax -->
+  <div class="layer stars"></div>
+  <div class="layer mist"></div>
+  <div class="layer red-glow"></div>
+
+  <!-- Conteúdo -->
+  <div class="container">
+    <h1>O Enigma Haszard</h1>
+    <button class="btn" onclick="toggleScroll()">Revelar Pergaminho</button>
+    <div id="scroll" class="scroll">
+      <p>
+        Três vigias antigos observam os muros: <span class="highlight">Sangue</span>, <span class="highlight">Morte</span> e <span class="highlight">Conhecimento</span>.  
+        Suas forças moldaram o destino do Haszard, mas nenhuma delas é suprema.
+      </p>
+      <p>
+        Pois há uma entidade que habita em todos, silenciosa, invisível, inevitável: <span class="highlight">o Medo</span>.  
+        Ele pode aprisionar, corroer e levar ao <span class="highlight">Caos</span>...  
+        ou libertar, despertar e conduzir à <span class="highlight">Libertação</span>.
+      </p>
+      <p>
+        O verdadeiro poder não está em destruir, mas em escolher.  
+        Apenas aquele que encara o Medo e o domina encontrará o caminho.  
+      </p>
+      <p>
+        **Pergunta:**  
+        Diante do Medo, o que você escolhe: <span class="highlight">Caos</span> ou <span class="highlight">Libertação</span>?
+      </p>
+    </div>
+  </div>
+
+  <script>
+    function toggleScroll() {
+      document.getElementById("scroll").classList.toggle("open");
+    }
+  </script>
+</body>
+</html>
+
