@@ -3,178 +3,258 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Haszard SMP</title>
+  <title>Haszard SMP — Enigmas</title>
   <style>
-    /* Reset */
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body,html { height:100%; font-family:"Segoe UI",sans-serif; overflow-x:hidden; }
+    /* ===== Reset & base ===== */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;font-family: "Segoe UI", Roboto, Arial, sans-serif;background:#a8d8ff;}
+    a{color:inherit}
 
-    /* --- TELA INICIAL --- */
-    .menu {
-      background: linear-gradient(180deg, #a8d8ff 0%, #5fb3f3 100%);
-      height:100vh;
+    /* ===== App layout ===== */
+    .app {
+      min-height:100vh;
       display:flex;
-      flex-direction:column;
       align-items:center;
       justify-content:center;
-      color:#00324d;
-      text-align:center;
+      padding:28px;
+    }
+
+    /* ===== Menu inicial (azul claro) ===== */
+    .menu {
+      width:100%; max-width:1100px;
+      background: linear-gradient(180deg,#cfeffd 0%, #8ec8ff 100%);
+      border-radius:18px;
+      padding:36px;
+      box-shadow: 0 20px 60px rgba(6,27,44,0.22);
+      display:flex;
+      gap:28px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .brand {
+      display:flex;
+      gap:18px;
+      align-items:center;
+    }
+    .logo {
+      display:flex;
+      align-items:center;
+      gap:10px;
     }
     .title {
-      font-size: 52px;
-      font-weight: 900;
-      letter-spacing: 4px;
-      margin-bottom: 20px;
-      color: #00324d;
-      text-shadow: 0 0 12px rgba(255,255,255,0.7);
+      font-weight:800;
+      color:#012836;
+      font-size:36px;
+      letter-spacing:2px;
+      line-height:1;
     }
-    .title span.starA {
-      position:relative;
-      display:inline-block;
-      width: 40px;
-      height: 40px;
-      margin:0 3px;
-      background: #fff;
-      clip-path: polygon(
-        50% 0%,
-        61% 38%,
-        98% 38%,
-        68% 59%,
-        79% 96%,
-        50% 74%,
-        21% 96%,
-        32% 59%,
-        2% 38%,
-        39% 38%
-      );
-      border-radius: 10px;
-      box-shadow: 0 0 14px rgba(255,255,255,0.6);
+    /* Estrela arredondada substituindo o primeiro 'A' */
+    .title .star-wrap {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:44px;height:44px;
+      background:#fff;
+      border-radius:10px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+      margin:0 6px;
     }
-    .subtitle {
-      font-size: 18px;
-      margin-bottom: 40px;
-      color:#002233;
+    /* desenha a estrela interna com SVG (fixo) */
+    .subtitle { color:#003247; font-size:14px; opacity:0.95; }
+
+    /* Menu lateral de navegação (botões) */
+    .nav {
+      display:flex;
+      gap:12px;
+      align-items:center;
     }
     .btn {
-      background: transparent;
-      border:2px solid #00324d;
-      color:#00324d;
-      padding:12px 24px;
-      font-size:16px;
+      background:transparent;
+      border:2px solid rgba(1,40,54,0.12);
+      color:#012836;
+      padding:10px 16px;
+      border-radius:10px;
       font-weight:700;
-      border-radius:12px;
       cursor:pointer;
-      transition: all 0.25s ease;
+      transition: all .18s ease;
     }
-    .btn:hover {
-      background:#00324d;
-      color:#fff;
-      transform:scale(1.05);
-      box-shadow:0 0 20px rgba(0,0,0,0.2);
+    .btn.primary {
+      background:#012836; color:#fff; border-color: transparent;
+      box-shadow: 0 12px 30px rgba(1,40,54,0.18);
+    }
+    .btn:hover { transform: translateY(-3px); }
+
+    /* ===== Área de conteúdo (onde enigmas aparecem) ===== */
+    .content {
+      width:100%;
+      max-width:1100px;
+      margin-top:28px;
+      color:#efe9da;
     }
 
-    /* --- PÁGINA DE ENIGMAS --- */
-    .enigmas {
-      display:none;
-      min-height:100vh;
-      background: linear-gradient(180deg,#1a1a1a,#000);
-      color:#eee;
-      perspective: 1000px; /* habilita parallax */
-    }
-    .enigmas h2 {
-      text-align:center;
-      font-size:32px;
-      margin:40px 0 20px;
-      color:#d4af37;
+    /* .page esconde/mostra as telas */
+    .page { display:none; }
+    .page.active { display:block; }
+
+    /* ===== ENIGMAS PAGE ===== */
+    .enigmas-wrap {
+      background: linear-gradient(180deg,#0c0c0c 0%, #111 100%);
+      padding:34px;
+      border-radius:14px;
+      box-shadow: 0 18px 50px rgba(0,0,0,0.6);
+      color:#efe6cf;
     }
 
-    /* Parallax Scroll */
-    .parallax {
+    /* Parallax container (simples: JS move layers relativo ao scroll) */
+    .parallax-viewport {
       position:relative;
-      height:100vh;
+      height:70vh;
+      min-height:520px;
       overflow:auto;
       perspective: 800px;
+      margin-bottom:18px;
     }
-    .layer {
-      position:absolute;
-      top:0; left:0; right:0; bottom:0;
-      background-size:cover;
-      background-position:center;
-      transform-style: preserve-3d;
+    /* fundo raso (camada distante) */
+    .parallax-bg {
+      position:absolute; inset:0;
+      background: radial-gradient(circle at 20% 20%, rgba(210,170,60,0.06), transparent 20%),
+                  radial-gradient(circle at 80% 80%, rgba(160,0,0,0.04), transparent 20%),
+                  linear-gradient(180deg, #0b0b0b, #0f0f0f);
+      transform: translateZ(-200px) scale(1.25);
+      z-index:1;
+      will-change: transform;
     }
-    .layer.bg1 { background: radial-gradient(circle at top,#2c2c2c,#0c0c0c); transform: translateZ(-2px) scale(3); }
-    .layer.bg2 { background: linear-gradient(180deg,#f5e6c4,#d9b86a); opacity:0.85; transform: translateZ(-1px) scale(2); }
+    /* camada médio (ornamento leve) */
+    .parallax-mid {
+      position:absolute; inset:0;
+      background-image: linear-gradient(180deg, rgba(255,255,255,0.02), transparent 30%);
+      z-index:2;
+      will-change: transform;
+      mix-blend-mode: overlay;
+    }
 
-    /* Pergaminho */
+    /* O pergaminho (frente da cena) */
     .scroll {
       position:relative;
-      margin:120px auto;
-      max-width:720px;
-      background:#f5e6c4;
-      color:#2b1b0f;
-      padding:36px;
-      border-radius:12px;
-      box-shadow:0 15px 40px rgba(0,0,0,0.7);
-      font-family:Georgia,serif;
       z-index:10;
+      width: min(860px, 92%);
+      margin: 60px auto;
+      background:
+         linear-gradient(180deg, #f7e9cf 0%, #e7c988 45%, #d1a85a 100%);
+      padding: 28px;
+      border-radius: 14px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6), inset 0 -6px 30px rgba(0,0,0,0.06);
+      border: 2px solid rgba(0,0,0,0.12);
+      transform-origin: center;
+      will-change: transform;
     }
-    pre {
-      white-space:pre-wrap;
-      margin-bottom:16px;
-      font-style:italic;
-    }
-
-    /* Botões dentro do enigma */
-    .enig-btns {
-      text-align:center;
-      margin-top:20px;
-    }
-    .enig-btns button {
-      background: transparent;
-      border:2px solid #d4af37;
-      color:#d4af37;
-      padding:8px 18px;
+    .scroll::before, .scroll::after {
+      content:"";
+      position:absolute; left:-8%; right:-8%;
+      height:56px; background: linear-gradient(180deg,#eee0b9,#d3b06b);
+      z-index:9; box-shadow:0 8px 18px rgba(0,0,0,0.28);
       border-radius:10px;
-      cursor:pointer;
-      margin:0 6px;
-      transition:all 0.2s ease;
     }
-    .enig-btns button:hover {
-      background:#d4af37;
-      color:#000;
+    .scroll::before { top:-42px; clip-path: polygon(0 45%,10% 20%,18% 55%,28% 22%,38% 60%,48% 30%,58% 62%,68% 18%,78% 56%,88% 26%,100% 48%,100% 100%,0 100%); }
+    .scroll::after  { bottom:-42px; clip-path: polygon(0 55%,10% 80%,18% 45%,28% 78%,38% 40%,48% 70%,58% 38%,68% 82%,78% 44%,88% 74%,100% 52%,100% 0,0 0); }
+
+    .scroll h3 { color:#6b4a20; margin-bottom:8px; }
+    .poem {
+      font-family: Georgia, "Times New Roman", serif;
+      font-style: italic;
+      color:#2f1f0d;
+      line-height:1.6;
+      white-space:pre-wrap;
     }
 
-    /* Solução escondida */
+    .meta {
+      margin-top:12px; color:#3b2a12; font-size:14px;
+    }
+
+    /* Enigmas controls */
+    .controls { display:flex; gap:10px; margin-top:16px; justify-content:center; flex-wrap:wrap; }
+    .controls .small { padding:8px 12px; font-size:14px; border-radius:8px; }
+
+    /* solução */
     .solution {
-      margin-top:20px;
-      padding:16px;
-      background:rgba(0,0,0,0.1);
-      border-left:4px solid #d4af37;
+      margin-top:16px;
+      background: rgba(0,0,0,0.06);
+      padding:12px;
+      border-left:4px solid #8b0000;
+      color:#2b1b0f;
       display:none;
     }
+
+    /* input resposta */
+    .try-form { display:flex; gap:8px; justify-content:center; margin-top:14px; }
+    .try-form input {
+      padding:8px 10px; border-radius:8px; border:1px solid rgba(0,0,0,0.12);
+      background:#fff; color:#111; min-width:180px;
+    }
+
+    /* rodapé */
+    .foot { margin-top:14px; text-align:center; color:#9ea195; font-size:13px; }
+
+    /* responsivo */
+    @media (max-width:720px){
+      .menu{flex-direction:column;align-items:flex-start}
+      .title{font-size:28px}
+      .parallax-viewport{height:62vh}
+    }
+
   </style>
 </head>
 <body>
+  <div class="app">
 
-  <!-- MENU INICIAL -->
-  <section class="menu" id="menu">
-    <div class="title">
-      H<span class="starA"></span>SZARD SMP
+    <!-- MENU -->
+    <div class="menu" role="banner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <!-- Título: H + estrela (substitui o A) + SZARD SMP -->
+          <div class="title">
+            H<span class="star-wrap" aria-hidden="true">
+              <!-- SVG estrela arredondada -->
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="#ffdfa0" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 3px 6px rgba(0,0,0,0.12));">
+                <path d="M12 2.5l2.39 4.85 5.36.78-3.88 3.78.92 5.35L12 15.9 6.21 17.26l.92-5.35L3.25 8.13l5.36-.78L12 2.5z" rx="3" />
+              </svg>
+            </span>SZARD SMP
+          </div>
+        </div>
+        <div>
+          <div class="subtitle">Um mundo de mistérios e segredos além do muro...</div>
+        </div>
+      </div>
+
+      <nav class="nav" role="navigation" aria-label="Principal">
+        <button class="btn" onclick="goHome()">Início</button>
+        <button class="btn primary" onclick="abrirEnigmas()">Enigmas</button>
+      </nav>
     </div>
-    <div class="subtitle">Um mundo de mistérios e segredos além do muro...</div>
-    <button class="btn" onclick="abrirEnigmas()">Enigmas</button>
-  </section>
 
-  <!-- PÁGINA DE ENIGMAS -->
-  <section class="enigmas" id="enigmas">
-    <h2>📜 O Sussurro do Muro</h2>
+    <!-- ÁREA DE CONTEÚDO -->
+    <div class="content">
+      <!-- Páginas -->
+      <div id="page-home" class="page active">
+        <div style="margin:22px auto; max-width:1100px; text-align:center;">
+          <p style="color:#012836; font-weight:700; font-size:18px;">Bem-vindo, viajante. Clique em <strong>Enigmas</strong> para descobrir o fragmento escondido.</p>
+          <div style="height:18px"></div>
+        </div>
+      </div>
 
-    <div class="parallax">
-      <div class="layer bg1"></div>
-      <div class="layer bg2"></div>
+      <div id="page-enigmas" class="page">
+        <div class="enigmas-wrap">
+          <h2 style="text-align:center; color:#d4af37">📜 O Sussurro do Muro</h2>
 
-      <div class="scroll">
-        <pre>
+          <!-- Parallax viewport -->
+          <div id="viewport" class="parallax-viewport" tabindex="0" aria-label="Área do pergaminho">
+            <div id="bg" class="parallax-bg"></div>
+            <div id="mid" class="parallax-mid"></div>
+
+            <!-- Pergaminho (camada frontal) -->
+            <div id="scroll" class="scroll" role="article" aria-live="polite">
+              <h3>Fragmento de pergaminho</h3>
+              <div class="poem">
 Mares calmos nunca enfrentam tempestade,
 Unidos, olhos vigiam as fissuras,
 Rastros de poeira nas pedras caídas,
@@ -184,46 +264,130 @@ Rachaduras que pedem resposta,
 A sombra caminha sem ser vista,
 Crianças contam o que faltou,
 O sal na ferida lembra aviso.
-        </pre>
+              </div>
 
-        <p><b>⚫ Traço estranho (Morse):</b><br>
-        <code>.-.. .. -... . .-. - .- -.-. .- ---</code></p>
+              <div class="meta">
+                <strong>⚫ Traço estranho (Morse):</strong>
+                <div style="margin-top:8px"><code>.-.. .. -... . .-. - .- -.-. .- ---</code></div>
 
-        <p><b>🔶 Símbolo cifrado:</b><br>
-        <code>QIHS</code></p>
+                <div style="margin-top:10px"><strong>🔶 Símbolo cifrado:</strong>
+                <div style="margin-top:8px"><code>QIHS</code></div></div>
+              </div>
 
-        <div class="enig-btns">
-          <button onclick="mostrarSol()">Mostrar Resposta</button>
-          <button onclick="voltarMenu()">Voltar ao Menu</button>
-        </div>
+              <!-- Controles interativos -->
+              <div class="controls" role="group" aria-label="Controles do enigma">
+                <button class="btn small" onclick="toggleScrollZoom()">Zoom</button>
+                <button class="btn small" onclick="revealScroll()">Revelar/Esconder Conteúdo</button>
+                <button class="btn small" onclick="toggleSolution()">Mostrar Solução</button>
+              </div>
 
-        <div class="solution" id="solution">
-          <h3>Resposta: MEDO</h3>
-          <p><b>Passo-a-passo:</b></p>
-          <ol>
-            <li>Primeiras letras do poema → MURO FRACO</li>
-            <li>Morse → LIBERTACAO</li>
-            <li>Cifra (QIHS, César -4) → MEDO</li>
-          </ol>
-          <p>O medo é superior a todas as entidades, podendo causar caos ou libertação.</p>
+              <div class="try-form" aria-hidden="false">
+                <input id="tryAnswer" placeholder="Digite sua resposta (ex: MEDO)" />
+                <button class="btn small" onclick="tryAnswer()">Tentar</button>
+              </div>
+
+              <div id="solutionBox" class="solution" aria-hidden="true">
+                <strong>Resposta: <span style="letter-spacing:2px">MEDO</span></strong>
+                <p style="margin-top:8px">Como desvendar (passo a passo):</p>
+                <ol style="color:#2b1b0f">
+                  <li>Acróstico — primeiras letras do poema → <em>MURO FRACO</em>.</li>
+                  <li>Morse → <em>LIBERTACAO</em> (sem acento).</li>
+                  <li>Cifra (QIHS com César -4) → <em>MEDO</em>.</li>
+                </ol>
+                <p style="margin-top:6px">Interpretação: o medo pode causar caos ou libertação — escolha define destino.</p>
+              </div>
+
+              <div class="foot">Se quiser, pressione "Voltar" no menu para retornar.</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </section>
 
-  <script>
-    function abrirEnigmas() {
-      document.getElementById("menu").style.display="none";
-      document.getElementById("enigmas").style.display="block";
+  </div>
+
+<script>
+/* ===== Navegação simples sem reload ===== */
+function abrirEnigmas(){
+  document.getElementById('page-home').classList.remove('active');
+  document.getElementById('page-enigmas').classList.add('active');
+  // quando abrir ensure viewport starts at top
+  setTimeout(()=>{const vp = document.getElementById('viewport'); if(vp) vp.scrollTop = 0;}, 80);
+}
+function goHome(){
+  document.getElementById('page-enigmas').classList.remove('active');
+  document.getElementById('page-home').classList.add('active');
+}
+
+/* ===== Parallax simples para o pergaminho =====
+   - move camadas quando a viewport é rolada
+*/
+(function(){
+  const vp = document.getElementById('viewport');
+  const bg = document.getElementById('bg');
+  const mid = document.getElementById('mid');
+  const scrollEl = document.getElementById('scroll');
+
+  // safety
+  if(!vp || !bg || !mid || !scrollEl) return console.log('Parallax não inicializado (elemento não encontrado)');
+
+  // on scroll: ler vp.scrollTop e aplicar transforms
+  vp.addEventListener('scroll', ()=> {
+    const t = vp.scrollTop; // 0..height
+    // camadas: bg move menos (sensação distante), mid move um pouco, scroll levemente
+    bg.style.transform = `translateY(${t * 0.12}px) scale(1.05)`;
+    mid.style.transform = `translateY(${t * 0.24}px)`;
+    scrollEl.style.transform = `translateY(${Math.min(t * 0.36, 40)}px)`;
+  });
+
+  // interactive reveal/hide/zoom controls
+  window.revealScroll = function(){
+    // toggle a visibilidade do texto interno (apenas efeito de opacidade)
+    if(scrollEl.style.opacity === '0.12'){
+      scrollEl.style.opacity = ''; scrollEl.style.maxHeight = '';
+    } else {
+      scrollEl.style.opacity = '1';
     }
-    function voltarMenu() {
-      document.getElementById("enigmas").style.display="none";
-      document.getElementById("menu").style.display="flex";
+  };
+
+  let zoomed = false;
+  window.toggleScrollZoom = function(){
+    zoomed = !zoomed;
+    if(zoomed){
+      scrollEl.style.transform = 'translateY(0px) scale(1.04)';
+      scrollEl.style.boxShadow = '0 30px 80px rgba(0,0,0,0.75)';
+    } else {
+      scrollEl.style.transform = 'translateY(0px) scale(1)';
+      scrollEl.style.boxShadow = '';
     }
-    function mostrarSol() {
-      const sol = document.getElementById("solution");
-      sol.style.display = sol.style.display === "block" ? "none" : "block";
-    }
-  </script>
+  };
+
+})();
+
+/* ===== Solução / tentativa de resposta ===== */
+function toggleSolution(){
+  const box = document.getElementById('solutionBox');
+  if(!box) return;
+  const showing = box.style.display === 'block';
+  box.style.display = showing ? 'none' : 'block';
+  box.setAttribute('aria-hidden', String(showing));
+}
+
+function tryAnswer(){
+  const input = document.getElementById('tryAnswer');
+  if(!input) return;
+  const val = (input.value||'').trim().toLowerCase();
+  if(!val){ alert('Digite uma resposta antes.'); return; }
+  if(val === 'medo'){
+    toggleSolution();
+    alert('Correto — a solução foi revelada.');
+  } else {
+    alert('Incorreto. Tente novamente.');
+  }
+}
+
+/* ===== Debug: mostra versão no console para confirmar atualização do arquivo ===== */
+console.log('Haszard SMP — build: 2025-09-24 v3 — arquivo carregado. Se você não vê mudanças, faça um hard refresh (Ctrl+F5) ou abra em modo anônimo.');
+</script>
 </body>
 </html>
