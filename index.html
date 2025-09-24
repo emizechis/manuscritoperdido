@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Enigma Haszard</title>
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      overflow-x: hidden;
+      color: #f5f5dc;
+      font-family: 'Georgia', serif;
+      background: linear-gradient(180deg, #0a0a0a, #1a1a1a);
+      perspective: 1px;
+      transform-style: preserve-3d;
+    }
+
+    /* Camadas parallax */
+    .parallax-layer {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-repeat: no-repeat;
+      background-size: cover;
+      z-index: -2;
+    }
+
+    .layer1 {
+      background: radial-gradient(circle at 20% 20%, rgba(255,215,0,0.08), transparent 70%);
+      transform: translateZ(-1px) scale(2);
+    }
+
+    .layer2 {
+      background: radial-gradient(circle at 80% 80%, rgba(255,0,0,0.06), transparent 70%);
+      transform: translateZ(-0.5px) scale(1.5);
+    }
+
+    /* Container central */
+    .container {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 2;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 3rem;
+      letter-spacing: 3px;
+      text-shadow: 0 0 15px #d4af37, 0 0 30px #ff0000;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      font-size: 1.2rem;
+      border: 2px solid #d4af37;
+      background: transparent;
+      color: #d4af37;
+      cursor: pointer;
+      transition: 0.3s ease;
+      border-radius: 10px;
+    }
+    .btn:hover {
+      background: #d4af37;
+      color: #0a0a0a;
+      box-shadow: 0 0 15px #d4af37;
+    }
+
+    /* Pergaminho animado */
+    .scroll {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 2s ease, padding 2s ease;
+      margin-top: 20px;
+      background: linear-gradient(180deg, #e2c97d, #c5a356);
+      border
