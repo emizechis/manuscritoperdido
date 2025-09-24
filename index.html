@@ -7,17 +7,17 @@
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
-      background: #add8e6; /* azul claro */
+      background: linear-gradient(135deg, #87ceeb, #e0f7fa);
       color: #222;
       overflow-x: hidden;
     }
 
-    /* Tela inicial */
+    /* === MENU INICIAL === */
     .menu {
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      flex-direction: column;
       height: 100vh;
       text-align: center;
       animation: fadeIn 1.5s ease;
@@ -25,14 +25,11 @@
 
     .menu h1 {
       font-size: 4rem;
+      font-weight: 700;
       color: #003366;
-      position: relative;
-      text-shadow: 2px 2px 6px rgba(0,0,0,0.2);
-      transition: transform 0.3s ease;
-    }
-
-    .menu h1:hover {
-      transform: scale(1.05);
+      letter-spacing: 3px;
+      margin-bottom: 40px;
+      text-shadow: 2px 2px 10px rgba(0,0,0,0.25);
     }
 
     .estrela {
@@ -45,42 +42,44 @@
                         68% 57%, 79% 91%, 50% 70%, 
                         21% 91%, 32% 57%, 2% 35%, 
                         39% 35%);
-      margin-left: 5px;
+      margin-left: 8px;
       box-shadow: 0 0 10px gold, 0 0 20px gold;
       transition: transform 0.3s ease;
     }
 
     .estrela:hover {
-      transform: scale(1.2) rotate(15deg);
+      transform: scale(1.3) rotate(20deg);
+    }
+
+    .menu-buttons {
+      display: flex;
+      gap: 20px;
     }
 
     .menu button {
-      margin-top: 30px;
-      padding: 14px 30px;
-      font-size: 1.3rem;
+      padding: 14px 32px;
+      font-size: 1.2rem;
       border: none;
-      border-radius: 12px;
-      background: #004080;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #004080, #0066cc);
       color: white;
       cursor: pointer;
       transition: all 0.3s ease;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.25);
     }
 
     .menu button:hover {
-      background: #0059b3;
+      background: linear-gradient(135deg, #0059b3, #0073e6);
       transform: scale(1.08);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.35);
     }
 
-    /* Tela Enigmas */
+    /* === ENIGMAS === */
     .enigmas {
       display: none;
       min-height: 100vh;
       padding: 60px;
-      background: url('https://www.transparenttextures.com/patterns/parchment.png');
-      background-attachment: fixed;
-      background-size: cover;
+      background: radial-gradient(circle at top, #e0e0e0, #c9b79c);
       animation: fadeIn 1.2s ease;
     }
 
@@ -103,7 +102,7 @@
       color: #5a3e1b;
     }
 
-    /* Rádio */
+    /* Rádio (Morse) */
     .radio {
       background: #0a0a0a;
       color: #33ff33;
@@ -113,11 +112,11 @@
       box-shadow: inset 0 0 20px #33ff33;
       margin-bottom: 35px;
       text-align: center;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       animation: glow 2s infinite alternate;
     }
 
-    /* Cifra */
+    /* Cifra (César) */
     .cifra {
       background: #e9e9e9;
       color: #222;
@@ -126,7 +125,7 @@
       border-radius: 15px;
       box-shadow: inset 0 0 15px rgba(0,0,0,0.25);
       text-align: center;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       transition: transform 0.3s ease;
     }
 
@@ -152,23 +151,25 @@
   </style>
 </head>
 <body>
-  <!-- Tela inicial -->
+  <!-- Menu inicial -->
   <div class="menu" id="menu">
     <h1>Haszard<span class="estrela"></span>SMP</h1>
-    <button onclick="abrirEnigmas()">Enigmas</button>
+    <div class="menu-buttons">
+      <button onclick="abrirEnigmas()">Enigmas</button>
+      <button disabled>Em breve...</button>
+    </div>
   </div>
 
   <!-- Tela enigmas -->
   <div class="enigmas" id="enigmas">
     <div class="pergaminho">
-      <h2>📜 Enigmas</h2>
+      <h2>📜 Enigma do Medo</h2>
       <div class="radio">
-        <p>− · − · · · / −−− −−− / ·−·· ···−</p>
-        <p>· ·−· / ·−·· −−− ·−· ·</p>
+        <p>·· / -- / · -·· ---</p>
       </div>
       <div class="cifra">
-        <p>YHQL YLGL YLFL</p>
-        <p>FDHVDU ± 3</p>
+        <p>PHGR</p>
+        <p>(César -3)</p>
       </div>
     </div>
   </div>
