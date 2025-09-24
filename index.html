@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ο Ψίθυρος του Τείχους - O Sussurro do Muro</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cinzel+Decorative:wght@400;700&family=Trajan+Pro:wght@400;700&display=swap');
+        
+        :root {
+            --marble-white: #f8f6f0;
+            --ancient-gold: #c9a961;
+            --bronze-dark: #cd7f32;
+            --stone-gray: #8b8680;
+            --blood-red: #722f37;
+            --shadow-deep: #2c2416;
+            --wood-brown: #8b4513;
+            --parchment: #f4e4bc;
+            --ink-black: #1a1a1a;
+            --pin-red: #dc143c;
+            --string-color: #8b0000;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Cinzel', serif;
+            background: 
+                radial-gradient(circle at 30% 20%, rgba(201, 169, 97, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(139, 134, 128, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, var(--marble-white), #e8e2d4);
+            color: var(--shadow-deep);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Tutorial Overlay */
+        .tutorial-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .tutorial-content {
+            background: var(--marble-white);
+            border: 4px solid var(--ancient-gold);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        
+        .tutorial-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2rem;
+            color: var(--blood-red);
+            margin-bottom: 20px;
+        }
+        
+        .tutorial-step {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(201, 169, 97, 0.1);
+            border-radius: 10px;
+            text-align: left;
+        }
+        
+        .tutorial-step h3 {
+            color: var(--ancient-gold);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .tutorial-buttons {
+            margin-top: 30px;
+        }
+        
+        .tutorial-btn {
+            background: var(--ancient-gold);
+            color: var(--shadow-deep);
+            border: none;
+            padding: 12px 25px;
+            margin: 0 10px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .tutorial-btn:hover {
+            background: var(--bronze-dark);
+            transform: translateY(-2px);
+        }
+        
+        /* Textura de mármore */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><filter id="noise"><feTurbulence baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter></defs><rect width="100" height="100" filter="url(%23noise)" opacity="0.05"/></svg>');
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        /* Container principal */
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        /* Cabeçalho grego */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            border-bottom: 3px double var(--ancient-gold);
+            animation: fadeInDown 2s ease-out;
+        }
+        
+        .greek-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2rem;
+            color: var(--ancient-gold);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+        
+        .title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 3.5rem;
+            color: var(--blood-red);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .title:hover {
+            color: var(--ancient-gold);
+            transform: scale(1.02);
+            text-shadow: 0 0 20px var(--ancient-gold);
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--stone-gray);
+            font-style: italic;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* Pergaminho grego */
+        .ancient-scroll {
+            background: 
+                linear-gradient(145deg, var(--parchment), #e6d3a3),
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><circle cx="10" cy="10" r="1" fill="rgba(139,69,19,0.1)"/></svg>');
+            border: 4px solid var(--bronze-dark);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 30px 0;
+            box-shadow: 
+                inset 0 0 30px rgba(205, 127, 50, 0.2),
+                0 15px 40px rgba(0,0,0,0.3),
+                0 0 0 2px var(--ancient-gold);
+            position: relative;
+            animation: unfurl 2s ease-out;
+        }
+        
+        @keyframes unfurl {
+            0% { transform: scaleY(0) rotateX(90deg); opacity: 0; }
+            50% { transform: scaleY(0.5) rotateX(45deg); opacity: 0.5; }
+            100% { transform: scaleY(1) rotateX(0deg); opacity: 1; }
+        }
+        
+        .scroll-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--ancient-gold);
+            padding-bottom: 20px;
+        }
+        
+        .scroll-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2.2rem;
+            color: var(--blood-red);
+            margin-bottom: 15px;
+        }
+        
+        /* Mesa de investigação interativa */
+        .investigation-board {
+            background: 
+                linear-gradient(45deg, #654321, #8b4513, #a0522d, #8b4513, #654321),
+                repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(0,0,0,0.1) 3px, rgba(0,0,0,0.1) 6px),
+                repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(0,0,0,0.05) 20px, rgba(0,0,0,0.05) 22px);
+            border: 6px solid var(--shadow-deep);
+            border-radius: 15px;
+            padding: 0;
+            margin: 40px 0;
+            height: 70vh;
+            position: relative;
+            box-shadow: 
+                inset 0 0 50px rgba(0,0,0,0.3),
+                0 20px 50px rgba(0,0,0,0.4);
+            overflow: hidden;
+            cursor: grab;
+            transform-origin: center center;
+            transition: transform 0.3s ease;
+        }
+        
+        .investigation-board.panning {
+            cursor: grabbing;
+        }
+        
+        .board-viewport {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 200%;
+            transform-origin: 0 0;
+            transition: transform 0.3s ease;
+        }
+        
+        .board-title {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--parchment);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            color: var(--shadow-deep);
+            font-size: 1rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+        
+        /* Controles da mesa */
+        .board-controls {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+        
+        .control-btn {
+            background: var(--ancient-gold);
+            border: 2px solid var(--bronze-dark);
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            color: var(--shadow-deep);
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+        
+        .control-btn:hover {
+            background: var(--bronze-dark);
+            transform: scale(1.05);
+        }
+        
+        .zoom-controls {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            z-index: 1000;
+        }
+        
+        .zoom-btn {
+            width: 40px;
+            height: 40px;
+            background: var(--ancient-gold);
+            border: 2px solid var(--bronze-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--shadow-deep);
+            transition: all 0.2s ease;
+        }
+        
+        .zoom-btn:hover {
+            background: var(--bronze-dark);
+            transform: scale(1.1);
+        }
+        
+        /* Itens interativos */
+        .board-item {
+            position: absolute;
+            cursor: move;
+            user-select: none;
+            z-index: 100;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .board-item:hover {
+            transform: scale(1.02);
+            z-index: 200;
+        }
+        
+        .board-item.dragging {
+            transform: rotate(2deg) scale(1.05);
+            z-index: 300;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+        
+        .board-item.pinning {
+            border: 3px dashed var(--pin-red) !important;
+            animation: pulse 0.5s infinite ease-in-out;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        /* Papel de evidência */
+        .evidence-paper {
+            background: var(--parchment);
+            border: 2px solid var(--ancient-gold);
+            border-radius: 8px;
+            padding: 15px;
+            min-width: 220px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            transform: rotate(-1deg);
+        }
+        
+        .evidence-title {
+            font-weight: 700;
+            color: var(--blood-red);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            border-bottom: 1px solid var(--ancient-gold);
+            padding-bottom: 5px;
+        }
+        
+        .evidence-content {
+            font-size: 0.95rem;
+            line-height: 1.4;
+            color: var(--shadow-deep);
+        }
+        
+        .morse-code {
+            font-family: 'Courier New', monospace;
+            background: rgba(0,0,0,0.1);
+            padding: 8px;
+            border-radius: 4px;
+            letter-spacing: 1px;
+            font-size: 1rem;
+            margin: 8px 0;
+        }
+        
+        .symbol-display {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2rem;
+            text-align: center;
+            background: rgba(114, 47, 55, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            color: var(--blood-red);
+            margin: 8px 0;
+        }
+        
+        /* Papel em branco */
+        .blank-paper {
+            background: #fefefe;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            width: 200px;
+            height: 150px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+            position: relative;
+            transform: rotate(1deg);
+        }
+        
+        .blank-paper::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 15px;
+            right: 15px;
+            height: 1px;
+            background: #e8e8e8;
+            box-shadow: 0 20px 0 #e8e8e8, 0 40px 0 #e8e8e8, 0 60px 0 #e8e8e8, 0 80px 0 #e8e8e8;
+        }
+        
+        .editable-area {
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            padding: 25px 15px 15px 15px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            color: var(--shadow-deep);
+            resize: none;
+            line-height: 1.5;
+        }
+        
+        /* Foto/Imagem */
+        .photo-frame {
+            background: #333;
+            border: 8px solid #222;
+            border-radius: 4px;
+            width: 180px;
+            height: 120px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            position: relative;
+            overflow: hidden;
+            transform: rotate(-2deg);
+        }
+        
+        .photo-upload {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+        
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #666;
+            color: #ccc;
+            font-size: 0.8rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .photo-placeholder:hover {
+            background: #777;
+        }
+        
+        /* Sistema de pins e conexões */
+        .pin {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: var(--pin-red);
+            border-radius: 50%;
+            border: 3px solid #fff;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+            cursor: pointer;
+            z-index: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .pin:hover {
+            background: var(--ancient-gold);
+            transform: scale(1.3);
+        }
+        
+        .pin.active {
+            background: var(--ancient-gold);
+            box-shadow: 0 0 15px var(--ancient-gold);
+            animation: glow 1s infinite ease-in-out;
+        }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 15px var(--ancient-gold); }
+            50% { box-shadow: 0 0 25px var(--ancient-gold); }
+        }
+        
+        .connection-string {
+            position: absolute;
+            height: 3px;
+            background: var(--string-color);
+            transform-origin: left center;
+            z-index: 50;
+            pointer-events: none;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        
+        .connection-string::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(255,255,255,0.3);
+        }
+        
+        /* Modo minimalista */
+        .minimal-mode {
+            background: #f5f5f5 !important;
+        }
+        
+        .minimal-mode .board-item {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+        }
+        
+        .minimal-mode .evidence-paper {
+            background: #fff;
+            border: 1px solid #ddd;
+        }
+        
+        /* Input de arquivo oculto */
+        .file-input {
+            position: absolute;
+            left: -9999px;
+            opacity: 0;
+        }
+        
+        /* Altar de decodificação */
+        .decode-altar {
+            background: 
+                radial-gradient(circle at center, rgba(201, 169, 97, 0.1), transparent 70%),
+                linear-gradient(145deg, var(--stone-gray), #9b968f);
+            border: 4px solid var(--ancient-gold);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px 0;
+            text-align: center;
+            box-shadow: 
+                inset 0 0 30px rgba(0,0,0,0.2),
+                0 15px 30px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        
+        .altar-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2rem;
+            color: var(--shadow-deep);
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .altar-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 15px;
+            font-size: 1.2rem;
+            background: var(--marble-white);
+            color: var(--shadow-deep);
+            border: 3px solid var(--bronze-dark);
+            border-radius: 10px;
+            margin: 10px 0;
+            font-family: 'Cinzel', serif;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .altar-input:focus {
+            outline: none;
+            box-shadow: 0 0 20px rgba(201, 169, 97, 0.5);
+            border-color: var(--ancient-gold);
+        }
+        
+        .altar-btn {
+            background: linear-gradient(145deg, var(--ancient-gold), #b8941f);
+            color: var(--shadow-deep);
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
+        
+        .altar-btn:hover {
+            background: linear-gradient(145deg, #b8941f, var(--ancient-gold));
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(201, 169, 97, 0.4);
+        }
+        
+        .revelation {
+            margin-top: 25px;
+            padding: 25px;
+            background: rgba(248, 246, 240, 0.9);
+            border-radius: 15px;
+            border: 2px solid var(--ancient-gold);
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            font-weight: 500;
+            text-align: center;
+            line-height: 1.6;
+        }
+        
+        /* Indicador de tecla Q */
+        .q-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: var(--pin-red);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+        
+        .q-indicator.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Animações */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .title { font-size: 2.5rem; }
+            .investigation-board { height: 50vh; }
+            .tutorial-content { padding: 20px; margin: 20px; }
+            .board-controls { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Tutorial Overlay -->
+    <div class="tutorial-overlay" id="tutorialOverlay">
+        <div class="tutorial-content">
+            <h2 class="tutorial-title">🏛️ Como Usar a Mesa de Investigação</h2>
+            
+            <div class="tutorial-step">
+                <h3>🖱️ Navegação Básica</h3>
+                <p>• <strong>Arrastar:</strong> Clique e arraste qualquer item pela mesa<br>
+                • <strong>Zoom:</strong> Use os botões + e - no canto inferior direito<br>
+                • <strong>Pan:</strong> Arraste o fundo da mesa para mover a visualização</p>
+            </div>
+            
+            <div class="tutorial-step">
+                <h3>📌 Sistema de Pins</h3>
+                <p>• <strong>Pressione Q:</strong> Ativa o modo de pin no item selecionado<br>
+                • <strong>Segure Q + Arraste:</strong> Cria um pin no item<br>
+                • <strong>Solte Q:</strong> Finaliza o pin<br>
+                • <strong>Conectar:</strong> Clique em dois pins para criar uma linha</p>
+            </div>
+            
+            <div class="tutorial-step">
+                <h3>📝 Interações</h3>
+                <p>• <strong>Papéis:</strong> Clique para escrever suas anotações<br>
+                • <strong>Fotos:</strong> Clique na área cinza para adicionar imagens<br>
+                • <strong>Evidências:</strong> Arraste e conecte para formar teorias</p>
+            </div>
+            
+            <div class="tutorial-step">
+                <h3>🎯 Objetivo</h3>
+                <p>Analise as pistas, conecte as evidências e descubra a palavra que revela o mistério do muro antigo. Use o altar no final para inserir sua resposta.</p>
+            </div>
+            
+            <div class="tutorial-buttons">
+                <button class="tutorial-btn" onclick="startInvestigation()">Começar Investigação</button>
+                <button class="tutorial-btn" onclick="skipTutorial()">Pular Tutorial</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Indicador da tecla Q -->
+    <div class="q-indicator" id="qIndicator">
+        Pressione Q para criar pins
+    </div>
+    
+    <div class="container">
+        <!-- Cabeçalho grego -->
+        <header class="header">
+            <div class="greek-title">Ο Ψίθυρος του Τείχους</div>
+            <h1 class="title" onclick="titleClick()">O Sussurro do Muro</h1>
+            <p class="subtitle">Nas ruínas da antiga cidade, os arqueólogos descobriram pergaminhos junto aos restos dos exploradores desaparecidos. As crianças que os encontraram trouxeram sinais de que algo terrível se aproxima... O muro que protegia este mundo está se desmoronando.</p>
+        </header>
+        
+        <!-- Pergaminho antigo -->
+        <section class="ancient-scroll">
+            <div class="scroll-header">
+                <h2 class="scroll-title">📜 Τὸ Ἀρχαῖον Γράμμα</h2>
+                <p><em>O Pergaminho Antigo - Encontrado entre cinzas e sangue, com símbolos gravados nas bordas de pedra...</em></p>
+            </div>
+            
+            <div class="poem" style="font-size: 1.1rem; line-height: 1.8; text-align: center; margin: 25px 0;">
+                <div style="margin: 8px 0; color: var(--blood-red); font-weight: 500;">Mares calmos nunca enfrentam tempestade,</div>
+                <div style="margin: 8px 0; color: var(--blood-red); font-weight: 500;">Unidos, olhos vigiam as fissuras,</div>
+                <div style="margin: 8px 0; color: var(--blood-red); font-weight: 500;">Rastros de poeira nas pedras caídas,</div>
+                <div style="margin: 8px 0; color: var(--blood-red); font-weight: 500;">Onde a noite sussurra segredos.</div>
+                <div style="margin: 8px 0; color: var(--blood-red); font-weight: 500;">Fragmentos de voz ecoam no corredor,</div>
+                <div style="margin: 8px 0; color: var(--blood-red); font-weight: 500;">Rachaduras que pedem resposta,</div>
+                <div style="margin: 8px 0; color: var(--blood-red); font-weight: 500;">A sombra caminha sem ser vista,</div>
+                <div style="margin: 8px 0; color: var(--blood-red); font-weight: 500;">Crianças contam o que faltou,</div>
+                <div style="margin: 8px 0; color: var(--blood-red); font-weight: 500;">O sal na ferida lembra aviso.</div>
+            </div>
+        </section>
+        
+        <!-- Mesa de investigação interativa -->
+        <section class="investigation-board" id="investigationBoard">
+            <div class="board-title">🏛️ Mesa de Investigação Arqueológica</div>
+            
+            <!-- Controles da mesa -->
+            <div class="board-controls">
+                <button class="control-btn" onclick="addBlankPaper()">+ Papel</button>
+                <button class="control-btn" onclick="addPhoto()">+ Foto</button>
+                <button class="control-btn" onclick="toggleMinimalMode()">Modo Minimal</button>
+                <button class="control-btn" onclick="clearBoard()">Limpar Mesa</button>
+            </div>
+            
+            <!-- Controles de zoom -->
+            <div class="zoom-controls">
+                <button class="zoom-btn" onclick="zoomIn()">+</button>
+                <button class="zoom-btn" onclick="zoomOut()">−</button>
+                <button class="zoom-btn" onclick="resetZoom()" style="font-size: 1rem;">⌂</button>
+            </div>
+            
+            <!-- Viewport da mesa -->
+            <div class="board-viewport" id="boardViewport">
+                <!-- Evidência do Morse -->
+                <div class="board-item evidence-paper" style="top: 100px; left: 80px;" data-id="morse">
+                    <div class="evidence-title">⚫ Inscrição Misteriosa</div>
+                    <div class="evidence-content">
+                        <div class="morse-code">.-.. .. -... . .-. - .- -.-. .- ---</div>
+                        <p style="font-style: italic; font-size: 0.85rem; margin-top: 8px;">Gravado em bronze antigo encontrado junto aos restos dos exploradores...</p>
+                    </div>
+                </div>
+                
+                <!-- Evidência do Símbolo -->
+                <div class="board-item evidence-paper" style="top: 100px; right: 80px;" data-id="symbol">
+                    <div class="evidence-title">🔶 Símbolo Sagrado</div>
+                    <div class="evidence-content">
+                        <div class="symbol-display">QIHS</div>
+                        <p style="font-style: italic; font-size: 0.85rem;">Esculpido em mármore nas bordas do muro em ruínas...</p>
+                    </div>
+                </div>
+                
+                <!-- Evidência do Poema -->
+                <div class="board-item evidence-paper" style="top: 320px; left: 200px;" data-id="poem">
+                    <div class="evidence-title">📝 Pista do Pergaminho</div>
+                    <div class="evidence-content">
+                        <p style="font-size: 0.9rem; line-height: 1.4;">
+                            <strong>Primeira letra de cada verso:</strong><br>
+                            <span style="color: var(--blood-red);">M</span>ares calmos...<br>
+                            <span style="color: var(--blood-red);">U</span>nidos, olhos...<br>
+                            <span style="color: var(--blood-red);">R</span>astros de poeira...<br>
+                            <span style="color: var(--blood-red);">O</span>nde a noite...
+                        </p>
+                        <p style="font-style: italic; font-size: 0.85rem; margin-top: 8px;">As primeiras letras formam algo...</p>
+                    </div>
+                </div>
+                
+                <!-- Evidência da instrução -->
+                <div class="board-item evidence-paper" style="top: 320px; right: 150px;" data-id="hint">
+                    <div class="evidence-title">🗝️ Instrução Ancestral</div>
+                    <div class="evidence-content">
+                        <p style="font-style: italic; color: var(--blood-red); font-size: 0.95rem; line-height: 1.4;">
+                            "Use o que está escondido em primeiro, decifre o que grita, então retire a máscara do que foi codificado..."
+                        </p>
+                        <p style="font-size: 0.85rem; margin-top: 8px;">Rabiscado nas margens do pergaminho com tinta vermelha.</p>
+                    </div>
+                </div>
+                
+                <!-- Papéis em branco iniciais -->
+                <div class="board-item blank-paper" style="top: 500px; left: 120px;" data-id="paper1">
+                    <textarea class="editable-area" placeholder="Anote suas descobertas aqui..."></textarea>
+                </div>
+                
+                <div class="board-item blank-paper" style="top: 480px; left: 350px;" data-id="paper2">
+                    <textarea class="editable-area" placeholder="Conecte as pistas..."></textarea>
+                </div>
+                
+                <!-- Moldura de foto inicial -->
+                <div class="board-item photo-frame" style="top: 500px; right: 200px;" data-id="photo1">
+                    <div class="photo-placeholder" onclick="selectImage(this)">
+                        Clique para adicionar<br>uma imagem
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Input oculto para upload de imagens -->
+        <input type="file" class="file-input" id="imageInput" accept="image/*" onchange="handleImageUpload(event)">
+        
+        <!-- Altar de decodificação -->
+        <section class="decode-altar">
+            <h3 class="altar-title">⚱ Altar da Revelação Final</h3>
+            <p style="font-style: italic; margin-bottom: 25px; color: var(--stone-gray); line-height: 1.6;">
+                "O muro estava fraco... sua queda pode significar LIBERTAÇÃO ou CAOS TOTAL.<br>
+                Quando todas as pistas se unirem, você descobrirá a verdade que os antigos tentaram esconder."
+            </p>
+            
+            <div style="margin: 20px 0;">
+                <input type="text" class="altar-input" id="finalAnswer" placeholder="Digite a palavra que revela o destino do muro..." maxlength="20">
+                <br>
+                <button class="altar-btn" onclick="revealTruth()">Revelar o Destino</button>
+            </div>
+            
+            <div class="revelation" id="revelation">
+                <span style="color: var(--stone-gray); font-style: italic;">Os segredos dos antigos aguardam sua descoberta...</span>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Estado do jogo
+        let gameState = {
+            zoomLevel: 1,
+            panX: 0,
+            panY: 0,
+            isPanning: false,
+            qPressed: false,
+            pinningMode: false,
+            currentPinningItem: null,
+            pins: [],
+            connections: [],
+            itemCounter: 0,
+            currentImageTarget: null,
+            minimalMode: false,
+            finalAnswer: 'MURO',
+            solved: false
+        };
+        
+        // Elementos DOM
+        const board = document.getElementById('investigationBoard');
+        const viewport = document.getElementById('boardViewport');
+        const qIndicator = document.getElementById('qIndicator');
+        
+        // Inicialização
+        function init() {
+            setupEventListeners();
+            initializeDraggables();
+            showTutorial();
+        }
+        
+        // Tutorial
+        function showTutorial() {
+            document.getElementById('tutorialOverlay').style.display = 'flex';
+        }
+        
+        function startInvestigation() {
+            document.getElementById('tutorialOverlay').style.display = 'none';
+            showQIndicator();
+        }
+        
+        function skipTutorial() {
+            document.getElementById('tutorialOverlay').style.display = 'none';
+        }
+        
+        function showQIndicator() {
+            setTimeout(() => {
+                qIndicator.classList.add('show');
+                setTimeout(() => {
+                    qIndicator.classList.remove('show');
+                }, 3000);
+            }, 1000);
+        }
+        
+        // Event Listeners
+        function setupEventListeners() {
+            // Controles de teclado
+            document.addEventListener('keydown', (e) => {
+                if (e.key.toLowerCase() === 'q' && !gameState.qPressed) {
+                    gameState.qPressed = true;
+                    qIndicator.classList.add('show');
+                    document.body.style.cursor = 'crosshair';
+                }
+            });
+            
+            document.addEventListener('keyup', (e) => {
+                if (e.key.toLowerCase() === 'q') {
+                    gameState.qPressed = false;
+                    gameState.pinningMode = false;
+                    gameState.currentPinningItem = null;
+                    qIndicator.classList.remove('show');
+                    document.body.style.cursor = 'default';
+                    
+                    // Remove indicadores de pinning
+                    document.querySelectorAll('.board-item').forEach(item => {
+                        item.classList.remove('pinning');
+                    });
+                }
+            });
+            
+            // Pan da mesa
+            board.addEventListener('mousedown', startPan);
+            board.addEventListener('touchstart', startPan);
+            
+            // Scroll para zoom
+            board.addEventListener('wheel', handleWheel);
+        }
+        
+        // Sistema de Pan
+        function startPan(e) {
+            if (e.target === board || e.target === viewport) {
+                gameState.isPanning = true;
+                board.classList.add('panning');
+                
+                const startX = e.clientX || e.touches[0].clientX;
+                const startY = e.clientY || e.touches[0].clientY;
+                const initialPanX = gameState.panX;
+                const initialPanY = gameState.panY;
+                
+                function onPanMove(e) {
+                    if (!gameState.isPanning) return;
+                    
+                    const currentX = e.clientX || e.touches[0].clientX;
+                    const currentY = e.clientY || e.touches[0].clientY;
+                    
+                    gameState.panX = initialPanX + (currentX - startX);
+                    gameState.panY = initialPanY + (currentY - startY);
+                    
+                    updateViewportTransform();
+                }
+                
+                function onPanEnd() {
+                    gameState.isPanning = false;
+                    board.classList.remove('panning');
+                    document.removeEventListener('mousemove', onPanMove);
+                    document.removeEventListener('mouseup', onPanEnd);
+                    document.removeEventListener('touchmove', onPanMove);
+                    document.removeEventListener('touchend', onPanEnd);
+                }
+                
+                document.addEventListener('mousemove', onPanMove);
+                document.addEventListener('mouseup', onPanEnd);
+                document.addEventListener('touchmove', onPanMove);
+                document.addEventListener('touchend', onPanEnd);
+                
+                e.preventDefault();
+            }
+        }
+        
+        // Controles de Zoom
+        function handleWheel(e) {
+            e.preventDefault();
+            
+            const delta = e.deltaY > 0 ? -0.1 : 0.1;
+            const newZoom = Math.max(0.5, Math.min(3, gameState.zoomLevel + delta));
+            
+            if (newZoom !== gameState.zoomLevel) {
+                gameState.zoomLevel = newZoom;
+                updateViewportTransform();
+            }
+        }
+        
+        function zoomIn() {
+            gameState.zoomLevel = Math.min(3, gameState.zoomLevel + 0.2);
+            updateViewportTransform();
+        }
+        
+        function zoomOut() {
+            gameState.zoomLevel = Math.max(0.5, gameState.zoomLevel - 0.2);
+            updateViewportTransform();
+        }
+        
+        function resetZoom() {
+            gameState.zoomLevel = 1;
+            gameState.panX = 0;
+            gameState.panY = 0;
+            updateViewportTransform();
+        }
+        
+        function updateViewportTransform() {
+            viewport.style.transform = `translate(${gameState.panX}px, ${gameState.panY}px) scale(${gameState.zoomLevel})`;
+        }
+        
+        // Sistema de Drag and Drop
+        function initializeDraggables() {
+            updateDraggables();
+        }
+        
+        function updateDraggables() {
+            const items = document.querySelectorAll('.board-item');
+            items.forEach(item => {
+                if (!item.hasAttribute('data-drag-initialized')) {
+                    item.setAttribute('data-drag-initialized', 'true');
+                    item.addEventListener('mousedown', startItemDrag);
+                    item.addEventListener('touchstart', startItemDrag);
+                }
+            });
+        }
+        
+        function startItemDrag(e) {
+            e.stopPropagation();
+            
+            const item = this;
+            
+            // Modo de pinning
+            if (gameState.qPressed) {
+                handlePinning(item, e);
+                return;
+            }
+            
+            item.classList.add('dragging');
+            
+            const rect = item.getBoundingClientRect();
+            const boardRect = viewport.getBoundingClientRect();
+            
+            const offsetX = (e.clientX || e.touches[0].clientX) - rect.left;
+            const offsetY = (e.clientY || e.touches[0].clientY) - rect.top;
+            
+            function onItemMove(e) {
+                const clientX = e.clientX || e.touches[0].clientX;
+                const clientY = e.clientY || e.touches[0].clientY;
+                
+                const newX = (clientX - boardRect.left - offsetX) / gameState.zoomLevel - gameState.panX / gameState.zoomLevel;
+                const newY = (clientY - boardRect.top - offsetY) / gameState.zoomLevel - gameState.panY / gameState.zoomLevel;
+                
+                item.style.left = Math.max(0, newX) + 'px';
+                item.style.top = Math.max(0, newY) + 'px';
+                item.style.right = 'auto';
+                item.style.bottom = 'auto';
+            }
+            
+            function onItemEnd() {
+                item.classList.remove('dragging');
+                document.removeEventListener('mousemove', onItemMove);
+                document.removeEventListener('mouseup', onItemEnd);
+                document.removeEventListener('touchmove', onItemMove);
+                document.removeEventListener('touchend', onItemEnd);
+            }
+            
+            document.addEventListener('mousemove', onItemMove);
+            document.addEventListener('mouseup', onItemEnd);
+            document.addEventListener('touchmove', onItemMove);
+            document.addEventListener('touchend', onItemEnd);
+            
+            e.preventDefault();
+        }
+        
+        // Sistema de Pinning
+        function handlePinning(item, e) {
+            if (!gameState.pinningMode || gameState.currentPinningItem !== item) {
+                // Iniciar modo de pinning
+                gameState.pinningMode = true;
+                gameState.currentPinningItem = item;
+                item.classList.add('pinning');
+                
+                // Criar pin na posição do mouse
+                const rect = item.getBoundingClientRect();
+                const boardRect = viewport.getBoundingClientRect();
+                
+                const relX = (e.clientX || e.touches[0].clientX) - rect.left;
+                const relY = (e.clientY || e.touches[0].clientY) - rect.top;
+                
+                createPin(item, relX, relY);
+            }
+        }
+        
+        function createPin(parentItem, x, y) {
+            const pin = document.createElement('div');
+            pin.className = 'pin';
+            pin.style.left = x - 8 + 'px';
+            pin.style.top = y - 8 + 'px';
+            
+            const pinData = {
+                id: 'pin_' + Date.now(),
+                element: pin,
+                parent: parentItem,
+                x: x - 8,
+                y: y - 8,
+                connections: []
+            };
+            
+            pin.addEventListener('click', (e) => {
+                e.stopPropagation();
+                handlePinClick(pinData);
+            });
+            
+            parentItem.appendChild(pin);
+            gameState.pins.push(pinData);
+            
+            return pinData;
+        }
+        
+        function handlePinClick(pinData) {
+            const activePins = gameState.pins.filter(p => p.element.classList.contains('active'));
+            
+            if (activePins.length === 0) {
+                // Primeiro pin selecionado
+                pinData.element.classList.add('active');
+            } else if (activePins.length === 1 && activePins[0] !== pinData) {
+                // Segundo pin selecionado - criar conexão
+                createConnection(activePins[0], pinData);
+                activePins[0].element.classList.remove('active');
+            } else {
+                // Desselecionar
+                activePins.forEach(p => p.element.classList.remove('active'));
+            }
+        }
+        
+        function createConnection(pin1, pin2) {
+            const connection = document.createElement('div');
+            connection.className = 'connection-string';
+            
+            const connectionData = {
+                id: 'conn_' + Date.now(),
+                element: connection,
+                pin1: pin1,
+                pin2: pin2
+            };
+            
+            viewport.appendChild(connection);
+            gameState.connections.push(connectionData);
+            
+            pin1.connections.push(connectionData);
+            pin2.connections.push(connectionData);
+            
+            updateConnection(connectionData);
+            
+            return connectionData;
+        }
+        
+        function updateConnection(connectionData) {
+            const pin1Rect = connectionData.pin1.parent.getBoundingClientRect();
+            const pin2Rect = connectionData.pin2.parent.getBoundingClientRect();
+            const viewportRect = viewport.getBoundingClientRect();
+            
+            const x1 = (pin1Rect.left - viewportRect.left) / gameState.zoomLevel + connectionData.pin1.x + 8;
+            const y1 = (pin1Rect.top - viewportRect.top) / gameState.zoomLevel + connectionData.pin1.y + 8;
+            const x2 = (pin2Rect.left - viewportRect.left) / gameState.zoomLevel + connectionData.pin2.x + 8;
+            const y2 = (pin2Rect.top - viewportRect.top) / gameState.zoomLevel + connectionData.pin2.y + 8;
+            
+            const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+            const angle = Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
+            
+            connectionData.element.style.width = length + 'px';
+            connectionData.element.style.left = x1 + 'px';
+            connectionData.element.style.top = y1 + 'px';
+            connectionData.element.style.transform = `rotate(${angle}deg)`;
+        }
+        
+        // Controles da mesa
+        function addBlankPaper() {
+            gameState.itemCounter++;
+            const paper = document.createElement('div');
+            paper.className = 'board-item blank-paper';
+            paper.style.top = Math.random() * 300 + 200 + 'px';
+            paper.style.left = Math.random() * 400 + 200 + 'px';
+            paper.setAttribute('data-id', 'paper_' + gameState.itemCounter);
+            
+            const textarea = document.createElement('textarea');
+            textarea.className = 'editable-area';
+            textarea.placeholder = 'Suas anotações...';
+            
+            paper.appendChild(textarea);
+            viewport.appendChild(paper);
+            updateDraggables();
+        }
+        
+        function addPhoto() {
+            gameState.itemCounter++;
+            const photo = document.createElement('div');
+            photo.className = 'board-item photo-frame';
+            photo.style.top = Math.random() * 300 + 200 + 'px';
+            photo.style.left = Math.random() * 400 + 200 + 'px';
+            photo.setAttribute('data-id', 'photo_' + gameState.itemCounter);
+            
+            const placeholder = document.createElement('div');
+            placeholder.className = 'photo-placeholder';
+            placeholder.textContent = 'Clique para adicionar uma imagem';
+            placeholder.onclick = () => selectImage(placeholder);
+            
+            photo.appendChild(placeholder);
+            viewport.appendChild(photo);
+            updateDraggables();
+        }
+        
+        function selectImage(placeholder) {
+            gameState.currentImageTarget = placeholder;
+            document.getElementById('imageInput').click();
+        }
+        
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file && gameState.currentImageTarget) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'photo-upload';
+                    img.onclick = () => selectImage(gameState.currentImageTarget);
+                    
+                    gameState.currentImageTarget.parentNode.replaceChild(img, gameState.currentImageTarget);
+                    gameState.currentImageTarget = null;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        function toggleMinimalMode() {
+            gameState.minimalMode = !gameState.minimalMode;
+            if (gameState.minimalMode) {
+                board.classList.add('minimal-mode');
+            } else {
+                board.classList.remove('minimal-mode');
+            }
+        }
+        
+        function clearBoard() {
+            if (confirm('Tem certeza que deseja limpar toda a mesa?')) {
+                // Remove itens adicionados pelo usuário
+                const userItems = viewport.querySelectorAll('.board-item:not([data-id^="morse"]):not([data-id^="symbol"]):not([data-id^="poem"]):not([data-id^="hint"])');
+                userItems.forEach(item => item.remove());
+                
+                // Remove pins e conexões
+                gameState.pins = [];
+                gameState.connections = [];
+                viewport.querySelectorAll('.pin, .connection-string').forEach(el => el.remove());
+                
+                // Limpa textareas dos itens originais
+                viewport.querySelectorAll('.editable-area').forEach(textarea => {
+                    textarea.value = '';
+                });
+            }
+        }
+        
+        // Revelação final
+        function revealTruth() {
+            const answer = document.getElementById('finalAnswer').value.toUpperCase().trim();
+            const revelation = document.getElementById('revelation');
+            
+            if (answer === gameState.finalAnswer) {
+                gameState.solved = true;
+                revelation.innerHTML = `
+                    <div style="text-align: center; animation: fadeIn 1s ease-out;">
+                        <h2 style="color: var(--ancient-gold); font-family: 'Cinzel Decorative', serif; margin-bottom: 20px; font-size: 1.8rem;">
+                            ⚱️ A VERDADE FOI REVELADA ⚱️
+                        </h2>
+                        <div style="color: var(--blood-red); font-size: 1.3rem; line-height: 1.6; margin-bottom: 20px;">
+                            <strong>"MURO"</strong> - A barreira ancestral que protegia este mundo.
+                        </div>
+                        <div style="color: var(--shadow-deep); font-size: 1.1rem; line-height: 1.8;">
+                            <p><em>Os exploradores descobriram que o muro estava se desmoronando...</em></p>
+                            <p><strong>Mas sua queda pode significar:</strong></p>
+                            <p>🕊️ <strong>LIBERTAÇÃO</strong> - O fim de uma antiga opressão</p>
+                            <p style="margin-bottom: 0;">👹 <strong>CAOS TOTAL</strong> - A liberação de terrores ancestrais</p>
+                        </div>
+                        <div style="margin-top: 25px; padding: 15px; background: rgba(114, 47, 55, 0.1); border-radius: 10px; border: 2px solid var(--blood-red);">
+                            <p style="color: var(--blood-red); font-style: italic; font-size: 1rem;">
+                                "A escolha agora é de vocês: tentar reparar a barreira ou deixar que ela desmorone completamente... 
+                                O destino deste mundo está em suas mãos."
+                            </p>
+                        </div>
+                        <div style="margin-top: 20px; font-size: 2rem;">
+                            🏛️⚡🌊⚡🏛️
+                        </div>
+                    </div>
+                `;
+                
+                // Efeito especial
+                createCelebrationEffect();
+            } else {
+                revelation.innerHTML = `
+                    <span style="color: var(--blood-red);">❌ As pistas ainda não foram conectadas corretamente...</span><br>
+                    <span style="font-size: 0.9rem; color: var(--stone-gray); font-style: italic;">
+                        Analise novamente as evidências na mesa de investigação.
+                    </span>
+                `;
+            }
+        }
+        
+        function createCelebrationEffect() {
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.style.position = 'fixed';
+                particle.style.left = Math.random() * window.innerWidth + 'px';
+                particle.style.top = '-10px';
+                particle.style.width = '6px';
+                particle.style.height = '6px';
+                particle.style.backgroundColor = Math.random() > 0.5 ? '#c9a961' : '#722f37';
+                particle.style.borderRadius = '50%';
+                particle.style.pointerEvents = 'none';
+                particle.style.zIndex = '9999';
+                particle.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
+                
+                document.body.appendChild(particle);
+                
+                setTimeout(() => {
+                    document.body.removeChild(particle);
+                }, 5000);
+            }
+        }
+        
+        function titleClick() {
+            const title = document.querySelector('.title');
+            title.style.animation = 'none';
+            setTimeout(() => {
+                title.style.animation = '';
+            }, 10);
+        }
+        
+        // CSS para animação de queda
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fall {
+                to {
+                    transform: translateY(100vh) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Inicializar quando a página carregar
+        window.addEventListener('load', init);
+        
+        // Atualizar conexões quando a janela redimensionar
+        window.addEventListener('resize', () => {
+            gameState.connections.forEach(updateConnection);
+        });
+    </script>
+</body>
+</html>
